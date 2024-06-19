@@ -1,0 +1,7 @@
+name: RomanStack
+version: '1'
+main: kirca.romanstack.RomanStack
+api-version: '1.20'
+commands:
+  камінь:
+    description: yyyy
