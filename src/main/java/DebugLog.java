@@ -1,5 +1,3 @@
-package kirca.romanstack;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,7 +38,7 @@ public class DebugLog implements Listener {
     @EventHandler
     public void InventoryClickEvent(InventoryClickEvent event) {
         event.getEventName();
-        Player player = (Player) event.getViewers().getFirst();
+        Player player = (Player) event.getWhoClicked().getInventory().getHolder();
         player.sendMessage("назва " + event.getEventName());
 
         UpdatePlayersData(player);
@@ -49,7 +47,7 @@ public class DebugLog implements Listener {
     @EventHandler
     public void InventoryDragEvent(InventoryDragEvent event) {
         event.getEventName();
-        Player player = (Player) event.getViewers().getFirst();
+        Player player = (Player) event;
         player.sendMessage("назва " + event.getEventName());
 
         UpdatePlayersData(player);
@@ -66,11 +64,8 @@ public class DebugLog implements Listener {
 
         event.setCancelled(true);
 
-        //DeleteAddedItems(Count, event.getItem().getItemStack().getType(), player);
         AddAddedItems(Count, event.getItem().getItemStack().getType(), player);
         event.getItem().remove();
-        //event.getItem().getItemStack();
-        //UpdatePlayersData(player);
     }
 
     private void DeleteAddedItems(int count, Material material, Player player){
@@ -114,27 +109,25 @@ public class DebugLog implements Listener {
     private int FindMaterialInInventory(Inventory inventory, Material material, boolean fromBeginningToEnd) {
         if (fromBeginningToEnd) {
             for (int i = 0; i <= inventory.getSize(); i++) {
-                Integer i1 = getInteger(inventory, material, i);
-                if (i1 != null) return i1;
+                if (CheckSlot(inventory, material, i)) return i;
             }
         }
         else {
             for (int i = inventory.getSize(); i >= 0; i--) {
-                Integer i1 = getInteger(inventory, material, i);
-                if (i1 != null) return i1;
+                if (CheckSlot(inventory, material, i)) return i;
             }
         }
         return -1;
     }
 
-    private Integer getInteger(Inventory inventory, Material material, int i) {
+    private Boolean CheckSlot(Inventory inventory, Material material, int i) {
         if (inventory.getItem(i) == null || inventory.getItem(i) == null) {
-            return null;
+            return false;
         }
         if (inventory.getItem(i).getType() == material && inventory.getItem(i).getAmount() < 64) {
-            return i;
+            return true;
         }
-        return null;
+        return false;
     }
 
 }

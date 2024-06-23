@@ -1,7 +1,7 @@
-name: RomanStack
+name: StackOptimized_1.21
 version: '${project.version}'
-main: kirca.romanstack.RomanStack
-api-version: '1.20'
+main: StackMain
+api-version: '1.21'
 commands:
   камінь:
     description: yyyy

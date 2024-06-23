@@ -1,21 +1,11 @@
-package kirca.romanstack;
-
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static org.bukkit.block.PistonMoveReaction.MOVE;
-import static org.bukkit.event.inventory.InventoryAction.PICKUP_ALL;
-import static org.bukkit.event.inventory.InventoryAction.PICKUP_ONE;
-
-public final class RomanStack extends JavaPlugin {
+public final class StackMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
@@ -48,5 +38,4 @@ public final class RomanStack extends JavaPlugin {
 
         return false;
     }
-
 }
