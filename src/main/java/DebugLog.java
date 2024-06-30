@@ -2,6 +2,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -14,7 +15,6 @@ import java.util.*;
 
 //InventoryClickEvent
 //InventoryDragEvent
-//PlayerPickupItemEvent
 
 public class DebugLog implements Listener {
 
@@ -48,7 +48,7 @@ public class DebugLog implements Listener {
     public void InventoryDragEvent(InventoryDragEvent event) {
         event.getEventName();
         Player player = (Player) event;
-        player.sendMessage("назва " + event.getEventName());
+        player.sendMessage("назваssss " + event.getEventName());
 
         UpdatePlayersData(player);
     }
