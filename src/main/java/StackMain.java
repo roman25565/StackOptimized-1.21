@@ -12,6 +12,7 @@ public final class StackMain extends JavaPlugin {
         getCommand("камінь").setExecutor(this);
 
         getServer().getPluginManager().registerEvents(new DebugLog(), this);
+        getServer().getPluginManager().registerEvents(new InventoryClickEventWorker(), this);
     }
 
     @Override
