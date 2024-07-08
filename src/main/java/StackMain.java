@@ -22,8 +22,7 @@ public final class StackMain extends JavaPlugin {
                 Player player = (Player) sender;
 
                 // Створити стек каменю з 60 одиниць
-                ItemStack stoneStack = new ItemStack(Material.WATER_BUCKET, 64);
-
+                ItemStack stoneStack = new ItemStack(Material.TOTEM_OF_UNDYING, 64);
                 // Додати стек до інвентарю гравця
                 player.getInventory().addItem(stoneStack);
 
