@@ -10,11 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7604ccb-48a3-4de6-b9f2-e56d953fe2e4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/Tools.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DebugLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DebugLog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/InventoryClickEventWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/InventoryClickEventWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/StackMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StackMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ussles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ussles.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +37,9 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2iGo0UWPBSdIvP17L4OmfQ6oFjd" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -154,6 +156,7 @@
       <workItem from="1720336208087" duration="4945000" />
       <workItem from="1720343031500" duration="20518000" />
       <workItem from="1720375047778" duration="8497000" />
+      <workItem from="1720417540375" duration="8203000" />
     </task>
     <servers />
   </component>

@@ -52,6 +52,7 @@ public class DebugLog implements Listener {
 
     //шукає елемент в наданому інвентарі вертає -1 якщо жодного не знайдено якщо знайдено повертає індекс слоту в якому менше 64 елементів шуканого типу
     public static int FindMaterialInInventory(Inventory inventory, Material material, Player player) {
+        player.sendMessage("material " + material);
         for (int i = 0; i < inventory.getSize(); i++) {
             player.sendMessage("i " + i);
             if (CheckSlot(inventory, material, i)) return i;

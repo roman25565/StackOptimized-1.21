@@ -68,49 +68,34 @@ public class InventoryClickEventWorker implements Listener {
     }
 
     private void PlaceAll(InventoryClickEvent event, Player player){
-        player.sendMessage("event.getInventory().getType()" + event.getInventory().getType());
         if (player.getItemOnCursor().getType() == Material.AIR) {//необхіно для нормального викидання предметів
             return;
         }
-        player.sendMessage("2");
         event.setCancelled(true);
         int rawSlot = event.getRawSlot();
         Inventory inventory = event.getInventory();
         int InventorySize = inventory.getSize();
 
-        player.sendMessage("rawSlot: " + rawSlot);
-        player.sendMessage("InventorySize" + InventorySize);
-
         if (inventory.getType() == InventoryType.CRAFTING){// без сундука
             int slotIndex = ConversionFromCraftingTypeToPlayerInventory(rawSlot);
             player.getInventory().setItem(slotIndex, player.getItemOnCursor());
         }
-        else if (inventory.getSize() <= rawSlot){// до інвентарю гравця з відкритим інвентарем сундука
-            int slotIndex = ConversionFromChessSlotIndexToPlayerInventorySlotIndex(rawSlot, inventory.getSize(), event.getSlotType());
+        else if (InventorySize <= rawSlot){// до інвентарю гравця з відкритим інвентарем сундука
+            int slotIndex = ConversionFromChessSlotIndexToPlayerInventorySlotIndex(rawSlot, InventorySize, event.getSlotType());
             player.getInventory().setItem(slotIndex, player.getItemOnCursor());
         }
-        else {
-            inventory.setMaxStackSize(64);
-            player.sendMessage("MaxStackSize" + inventory.getMaxStackSize());
+        else {//до сундукка
             ItemStack cursorStack = player.getItemOnCursor();
-            int amount = cursorStack.getAmount(); // Get the stack size
-
-// Create a new ItemStack with the same type and set the amount
+            int amount = cursorStack.getAmount();
             ItemStack itemToAdd = new ItemStack(cursorStack.getType(), amount);
 
 // Add the item to the inventory
             inventory.setItem(rawSlot, itemToAdd);
             inventory.getItem(rawSlot).setAmount(amount);
             player.updateInventory();
-            player.sendMessage("StackSize" + inventory.getItem(rawSlot));
         }
 
         player.setItemOnCursor(null);
-    }
-
-    private void COLLECT_TO_CURSOR(InventoryClickEvent event, Player player) {
-        event.setCancelled(true);
-
     }
 
     private void MoveToOtherInventory(InventoryClickEvent event, Player player){
@@ -140,6 +125,72 @@ public class InventoryClickEventWorker implements Listener {
         }
 
         event.setCurrentItem(null);
+    }
+
+    private void COLLECT_TO_CURSOR(InventoryClickEvent event, Player player) {
+        event.setCancelled(true);
+        ItemStack item = player.getItemOnCursor();
+        int count = item.getAmount();
+        player.sendMessage("item" + count);
+        Inventory inventory = event.getInventory();
+        int inventorySize = inventory.getSize();
+        int rawSlot = event.getRawSlot();
+        Material material = item.getType();
+
+        int needToAdd = 0;
+        if (inventory.getType() == InventoryType.CRAFTING){// без сундука
+            for (int i = 64 - count; i > 0; i--) {
+                int addedInLoop = 0;
+                int slotIndex = DebugLog.FindMaterialInInventory(player.getInventory(), material, player);
+                if(slotIndex == -1) break;
+                addedInLoop = player.getInventory().getItem(slotIndex).getAmount();
+                if (addedInLoop > i) {
+                    player.getInventory().getItem(slotIndex).setAmount(addedInLoop - i);
+                    needToAdd += i;
+                }else {
+                    player.getInventory().setItem(slotIndex, null);
+                    needToAdd += addedInLoop;
+                }
+
+                i -= addedInLoop - 1;
+            }
+        }
+        else if (inventorySize <= rawSlot){// до інвентарю гравця з відкритим інвентарем сундука
+            for (int i = 64 - count; i > 0; i--) {
+                int addedInLoop = 0;
+                int slotIndex = DebugLog.FindMaterialInInventory(player.getInventory(), material, player);
+                if(slotIndex == -1) break;
+                addedInLoop = player.getInventory().getItem(slotIndex).getAmount();
+                if (addedInLoop > i) {
+                    player.getInventory().getItem(slotIndex).setAmount(addedInLoop - i);
+                    needToAdd += i;
+                }else {
+                    player.getInventory().setItem(slotIndex, null);
+                    needToAdd += addedInLoop;
+                }
+
+                i -= addedInLoop - 1;
+            }
+        }else
+        {//до сундукка
+            for (int i = 64 - count; i > 0; i--) {
+                int addedInLoop = 0;
+                int slotIndex = DebugLog.FindMaterialInInventory(inventory, material, player);
+                if(slotIndex == -1) break;
+                addedInLoop = inventory.getItem(slotIndex).getAmount();
+                if (addedInLoop > i) {
+                    inventory.getItem(slotIndex).setAmount(addedInLoop - i);
+                    needToAdd += i;
+                }else {
+                    inventory.setItem(slotIndex, null);
+                    needToAdd += addedInLoop;
+                }
+
+                i -= addedInLoop - 1;
+            }
+        }
+        player.getItemOnCursor().setAmount(count + needToAdd);
+
     }
 
     private static boolean isPlayer(final Entity entity) {
