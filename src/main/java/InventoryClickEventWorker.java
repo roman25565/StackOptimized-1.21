@@ -1,9 +1,7 @@
 import org.bukkit.Material;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -32,7 +30,8 @@ public class InventoryClickEventWorker implements Listener {
 //        }
 
         Player player = (Player) event.getWhoClicked();
-                player.sendMessage(event.getAction().name());
+//                player.sendMessage(event.getAction().name());
+        player.sendMessage("s" + player.getItemOnCursor());
         switch (event.getAction()) {
             case PLACE_ALL: //Усі елементи на курсорі переміщуються до клацаного слота.
                 PlaceAll(event,player);
@@ -68,9 +67,12 @@ public class InventoryClickEventWorker implements Listener {
     }
 
     private void PlaceAll(InventoryClickEvent event, Player player){
+        player.sendMessage("s");
+        player.sendMessage("s" + player.getItemOnCursor() + "player.getItemOnCursor()");
         if (player.getItemOnCursor().getType() == Material.AIR) {//необхіно для нормального викидання предметів
             return;
         }
+
         event.setCancelled(true);
         int rawSlot = event.getRawSlot();
         Inventory inventory = event.getInventory();
@@ -106,7 +108,7 @@ public class InventoryClickEventWorker implements Listener {
         Inventory inventory = event.getInventory();
 
         for (int i = count; i > 0; i--) {
-            int slotIndex = DebugLog.FindMaterialInInventory(inventory, material, player);
+            int slotIndex = DebugLog.FindMaterialInInventory(inventory, material, player, true);
 
             int addCount = i > 64 ? 64 : i;
             if (slotIndex == -1) {
@@ -139,43 +141,15 @@ public class InventoryClickEventWorker implements Listener {
 
         int needToAdd = 0;
         if (inventory.getType() == InventoryType.CRAFTING){// без сундука
-            for (int i = 64 - count; i > 0; i--) {
-                int addedInLoop = 0;
-                int slotIndex = DebugLog.FindMaterialInInventory(player.getInventory(), material, player);
-                if(slotIndex == -1) break;
-                addedInLoop = player.getInventory().getItem(slotIndex).getAmount();
-                if (addedInLoop > i) {
-                    player.getInventory().getItem(slotIndex).setAmount(addedInLoop - i);
-                    needToAdd += i;
-                }else {
-                    player.getInventory().setItem(slotIndex, null);
-                    needToAdd += addedInLoop;
-                }
-
-                i -= addedInLoop - 1;
-            }
+            needToAdd = getNeedToAdd(player, count, material, needToAdd);
         }
         else if (inventorySize <= rawSlot){// до інвентарю гравця з відкритим інвентарем сундука
-            for (int i = 64 - count; i > 0; i--) {
-                int addedInLoop = 0;
-                int slotIndex = DebugLog.FindMaterialInInventory(player.getInventory(), material, player);
-                if(slotIndex == -1) break;
-                addedInLoop = player.getInventory().getItem(slotIndex).getAmount();
-                if (addedInLoop > i) {
-                    player.getInventory().getItem(slotIndex).setAmount(addedInLoop - i);
-                    needToAdd += i;
-                }else {
-                    player.getInventory().setItem(slotIndex, null);
-                    needToAdd += addedInLoop;
-                }
-
-                i -= addedInLoop - 1;
-            }
+            needToAdd = getNeedToAdd(player, count, material, needToAdd);
         }else
         {//до сундукка
             for (int i = 64 - count; i > 0; i--) {
                 int addedInLoop = 0;
-                int slotIndex = DebugLog.FindMaterialInInventory(inventory, material, player);
+                int slotIndex = DebugLog.FindMaterialInInventory(inventory, material, player, true);
                 if(slotIndex == -1) break;
                 addedInLoop = inventory.getItem(slotIndex).getAmount();
                 if (addedInLoop > i) {
@@ -191,6 +165,25 @@ public class InventoryClickEventWorker implements Listener {
         }
         player.getItemOnCursor().setAmount(count + needToAdd);
 
+    }
+
+    private int getNeedToAdd(Player player, int count, Material material, int needToAdd) {
+        for (int i = 64 - count; i > 0; i--) {
+            int addedInLoop = 0;
+            int slotIndex = DebugLog.FindMaterialInInventory(player.getInventory(), material, player, true);
+            if(slotIndex == -1) break;
+            addedInLoop = player.getInventory().getItem(slotIndex).getAmount();
+            if (addedInLoop > i) {
+                player.getInventory().getItem(slotIndex).setAmount(addedInLoop - i);
+                needToAdd += i;
+            }else {
+                player.getInventory().setItem(slotIndex, null);
+                needToAdd += addedInLoop;
+            }
+
+            i -= addedInLoop - 1;
+        }
+        return needToAdd;
     }
 
     private static boolean isPlayer(final Entity entity) {

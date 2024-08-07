@@ -32,7 +32,7 @@ public class DebugLog implements Listener {
 
     public static void AddItemsToInventory(int count, Material material, Inventory inventory,Player player){
         for (int i = count; i > 0; i--) {
-            int slotIndex = FindMaterialInInventory(inventory, material, player);
+            int slotIndex = FindMaterialInInventory(inventory, material, player, false);
 
             int addCount = i > 64 ? 64 : i;
             if (slotIndex == -1) {
@@ -51,21 +51,26 @@ public class DebugLog implements Listener {
     }
 
     //шукає елемент в наданому інвентарі вертає -1 якщо жодного не знайдено якщо знайдено повертає індекс слоту в якому менше 64 елементів шуканого типу
-    public static int FindMaterialInInventory(Inventory inventory, Material material, Player player) {
+    public static int FindMaterialInInventory(Inventory inventory, Material material, Player player, boolean can64) {
         player.sendMessage("material " + material);
         for (int i = 0; i < inventory.getSize(); i++) {
             player.sendMessage("i " + i);
-            if (CheckSlot(inventory, material, i)) return i;
+            if (CheckSlot(inventory, material, i, can64)) return i;
         }
         return -1;
     }
 
-    private static Boolean CheckSlot(Inventory inventory, Material material, int i) {
+    private static Boolean CheckSlot(Inventory inventory, Material material, int i,boolean can64) {
         if (inventory.isEmpty() || inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR) {
             return false;
         }
-        if (inventory.getItem(i).getType() == material && inventory.getItem(i).getAmount() < 64) {
-            return true;
+        if (inventory.getItem(i).getType() == material) {
+            if (can64){
+                return true;
+            }
+            else if (inventory.getItem(i).getAmount() < 64){
+                return true;
+            }
         }
         return false;
     }
