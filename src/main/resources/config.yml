@@ -1,0 +1,18 @@
+Settings:
+  Enable_Print_Console: true
+Groups:
+  Skulkers: 64
+  Beds: 64
+  Potions: 64
+  Enchanted_Books: 64
+  Minecarts: 64
+  Boats: 64
+  Banners: 64
+  Music_Disc: 64
+Items:
+  '0':
+    Material: GOAT_HORN
+    MaxStackSize: 64
+  '1':
+    Material: TOTEM_OF_UNDYING
+    MaxStackSize: 3

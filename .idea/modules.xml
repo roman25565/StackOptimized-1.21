@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/StackOptimized-1.21.iml" filepath="$PROJECT_DIR$/StackOptimized-1.21.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StackOptimized.iml" filepath="$PROJECT_DIR$/StackOptimized.iml" />
     </modules>
   </component>
 </project>
