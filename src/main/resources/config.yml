@@ -9,6 +9,7 @@ Groups:
   Boats: 64
   Banners: 64
   Music_Disc: 64
+  Buckets: 64
 Items:
   '0':
     Material: GOAT_HORN

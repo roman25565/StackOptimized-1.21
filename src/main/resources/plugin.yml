@@ -1,5 +1,5 @@
 name: StackOptimized
-version: '1.0'
+version: '1.2'
 main: Roman.stackOptimized.StackOptimized
 api-version: '1.21'
 commands:

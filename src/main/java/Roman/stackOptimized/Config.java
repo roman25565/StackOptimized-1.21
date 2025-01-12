@@ -64,7 +64,7 @@ public class Config {
         AddGroup(CanPrint, GroupsSection, "Boats", items);
         AddGroup(CanPrint, GroupsSection, "Banners", items);
         AddGroup(CanPrint, GroupsSection, "Music_Disc", items);
-
+        AddGroup(CanPrint, GroupsSection, "Buckets", items);
     }
 
     private void AddGroup(boolean canPrint, ConfigurationSection groupSection, String groupName, HashMap<Material, Integer> items) {
@@ -96,10 +96,10 @@ public class Config {
         }
 
         if (canPrint) {
-            System.out.println(ANSI_GREEN + groupName + " Group:" + ANSI_RESET);
-            System.out.println(ANSI_RESET +"+------------------------+----------------+-------+");
-            System.out.println(ANSI_RESET +"| Material               | Max Stack Size |Status |");
-            System.out.println(ANSI_RESET +"+------------------------+----------------+-------+");
+            System.out.println("[StackOptimized] "+ ANSI_GREEN + groupName + " Group:" + ANSI_RESET);
+            System.out.println(ANSI_RESET +"[StackOptimized] +------------------------+----------------+-------+");
+            System.out.println(ANSI_RESET +"[StackOptimized] | Material               | Max Stack Size |Status |");
+            System.out.println(ANSI_RESET +"[StackOptimized] +------------------------+----------------+-------+");
         }
         List<Material> materials = GetGroupMaterials(groupName);
 
@@ -113,13 +113,14 @@ public class Config {
             items.put(material, maxStackSize);
         }
         if (canPrint) {
-        System.out.println(ANSI_RESET +"+------------------------+----------------+-------+");
+        System.out.println(ANSI_RESET +"[StackOptimized] +------------------------+----------------+-------+");
         }
     }
 
-    private List<Material> GetGroupMaterials(String GroupName) {
+    public List<Material> GetGroupMaterials(String GroupName) {
         return switch (GroupName) {
             case "Skulkers" -> new ArrayList<>(Arrays.asList(
+                    Material.SHULKER_BOX ,
                     Material.WHITE_SHULKER_BOX, Material.GRAY_SHULKER_BOX, Material.ORANGE_SHULKER_BOX,
                     Material.MAGENTA_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX,
                     Material.LIME_SHULKER_BOX, Material.PINK_SHULKER_BOX, Material.GRAY_SHULKER_BOX, Material.LIGHT_GRAY_SHULKER_BOX,
@@ -154,16 +155,20 @@ public class Config {
                             Material.MUSIC_DISC_MELLOHI, Material.MUSIC_DISC_STAL, Material.MUSIC_DISC_STRAD, Material.MUSIC_DISC_WARD,
                             Material.MUSIC_DISC_11, Material.MUSIC_DISC_WAIT, Material.MUSIC_DISC_OTHERSIDE, Material.MUSIC_DISC_RELIC,
                             Material.MUSIC_DISC_5, Material.MUSIC_DISC_PIGSTEP, Material.MUSIC_DISC_PRECIPICE));
+            case "Buckets" -> new ArrayList<>(
+                    List.of(Material.BUCKET,Material.WATER_BUCKET,Material.LAVA_BUCKET,Material.AXOLOTL_BUCKET,Material.COD_BUCKET,Material.MILK_BUCKET,
+                            Material.TROPICAL_FISH_BUCKET,Material.POWDER_SNOW_BUCKET,Material.PUFFERFISH_BUCKET,Material.TADPOLE_BUCKET,Material.SALMON_BUCKET
+            ));
             default -> new ArrayList<>();
         };
     }
 
     private void AddItems(boolean CanPrint, HashMap<Material, Integer> items) {
         if (CanPrint) {
-            System.out.println(ANSI_GREEN + "Add Items:" + ANSI_RESET);
-            System.out.println(ANSI_RESET + "+------------------------+----------------+-------+");
-            System.out.println(ANSI_RESET + "| Material               | Max Stack Size |Status |");
-            System.out.println(ANSI_RESET + "+------------------------+----------------+-------+");
+            System.out.println(ANSI_GREEN + "[StackOptimized] Add Items:" + ANSI_RESET);
+            System.out.println(ANSI_RESET + "[StackOptimized] +------------------------+----------------+-------+");
+            System.out.println(ANSI_RESET + "[StackOptimized] | Material               | Max Stack Size |Status |");
+            System.out.println(ANSI_RESET + "[StackOptimized] +------------------------+----------------+-------+");
         }
 
         ConfigurationSection itemsSection = config.getConfigurationSection("Items");
@@ -209,7 +214,7 @@ public class Config {
         }
 
         if (CanPrint) {
-            System.out.println("+------------------------+----------------+-------+");
+            System.out.println("[StackOptimized] +------------------------+----------------+-------+");
         }
     }
 
@@ -245,10 +250,8 @@ public class Config {
         return true;
     }
     public List<Map.Entry<Material, Integer>> AlphabeticalSorting(Map<Material, Integer> items) {
-        // Створюємо список пар "матеріал-кількість" з вхідної мапи
         List<Map.Entry<Material, Integer>> list = new ArrayList<>(items.entrySet());
 
-        // Сортуємо список за алфавітним порядком назв матеріалів
         list.sort(Comparator.comparing(entry -> entry.getKey().toString()));
 
         return list;
