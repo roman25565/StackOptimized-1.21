@@ -3,6 +3,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEntityEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryEvents implements Listener {
@@ -26,7 +27,10 @@ public class InventoryEvents implements Listener {
         StackOptimized.Instance.TryStack(itemStack);
     }
 
-//    @EventHandler //Not work :(
-//    public void BucketEmptyEvent(PlayerBucketEmptyEvent event) {
-//    }
+    @EventHandler
+    public void BucketEmptyEvent(PlayerBucketEmptyEvent event) {
+        if (!_stackBuckets) {return;}
+        ItemStack item = event.getItemStack();
+        StackOptimized.Instance.TryStack(item);
+    }
 }

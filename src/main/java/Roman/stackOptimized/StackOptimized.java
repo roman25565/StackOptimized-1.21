@@ -60,10 +60,11 @@ public final class StackOptimized extends JavaPlugin {
         if (!(sender instanceof Player)) {
             return true;
         }
+        Player player = (Player) sender;
+        
         if(!command.getName().equalsIgnoreCase("setMaxStackSize")){
             return true;
         }
-        Player player = (Player) sender;
         if (!player.hasPermission("op"))
         {
             player.sendMessage("You don't have permission to use this command.");
