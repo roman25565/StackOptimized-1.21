@@ -38,7 +38,7 @@ public class Config {
         }
     }
 
-    public Map<Material, Integer> GetItemsConfig(boolean CanPrint) {
+    public Map<Material, Integer> LoadItemsConfig(boolean CanPrint) {
         var items = new HashMap<Material, Integer>();
 
         AddGroups(CanPrint, items);
@@ -96,10 +96,10 @@ public class Config {
         }
 
         if (canPrint) {
-            System.out.println("[StackOptimized] "+ ANSI_GREEN + groupName + " Group:" + ANSI_RESET);
-            System.out.println(ANSI_RESET +"[StackOptimized] +------------------------+----------------+-------+");
-            System.out.println(ANSI_RESET +"[StackOptimized] | Material               | Max Stack Size |Status |");
-            System.out.println(ANSI_RESET +"[StackOptimized] +------------------------+----------------+-------+");
+            System.out.println(ANSI_GREEN + groupName + " Group:" + ANSI_RESET);
+            System.out.println(ANSI_RESET +"+------------------------+----------------+-------+");
+            System.out.println(ANSI_RESET +"| Material               | Max Stack Size |Status |");
+            System.out.println(ANSI_RESET +"+------------------------+----------------+-------+");
         }
         List<Material> materials = GetGroupMaterials(groupName);
 
@@ -165,10 +165,14 @@ public class Config {
 
     private void AddItems(boolean CanPrint, HashMap<Material, Integer> items) {
         if (CanPrint) {
-            System.out.println(ANSI_GREEN + "[StackOptimized] Add Items:" + ANSI_RESET);
-            System.out.println(ANSI_RESET + "[StackOptimized] +------------------------+----------------+-------+");
-            System.out.println(ANSI_RESET + "[StackOptimized] | Material               | Max Stack Size |Status |");
-            System.out.println(ANSI_RESET + "[StackOptimized] +------------------------+----------------+-------+");
+            String header = ANSI_GREEN + "[StackOptimized] Додавання предметів:" + ANSI_RESET;
+            String border = ANSI_RESET + "[StackOptimized] ╔════════════════════════════════╦════════════════════╦════════╗";
+            String titles = ANSI_RESET + "[StackOptimized] ║      Матеріал                 ║  Макс. стак       ║ Статус ║";
+            String separator = ANSI_RESET + "[StackOptimized] ╠════════════════════════════════╬════════════════════╬════════╣";
+            System.out.println(header);
+            System.out.println(border);
+            System.out.println(titles);
+            System.out.println(separator);
         }
 
         ConfigurationSection itemsSection = config.getConfigurationSection("Items");
@@ -201,7 +205,7 @@ public class Config {
                 System.out.println("\u001B[31mIncorrect MaxStackSize " + itemData.get("Material").toString() + " Material\u001B[0m");
             }
 
-            String materialString = LoadedSuccessfully ? material.toString() : itemData.get("Material").toString();
+            String materialString = LoadedSuccessfully ? (material != null ? material.toString() : "null") : itemData.get("Material").toString();
             if (CanPrint) {
                 System.out.printf(ANSI_RESET + "[StackOptimized] " + "| %-22s | %-14d |   %3s   | \n",
                         materialString,
@@ -218,14 +222,135 @@ public class Config {
         }
     }
 
-    public Map<Material, Integer> AddData(Map<Material, Integer> items, Material material, int maxStackSize) {
-        items.putIfAbsent(material, maxStackSize);
-        int size = items.get(material);
-        if (size != maxStackSize) {
-            items.put(material, maxStackSize);
+    public List<GroupedItem> getGroupedItems(Map<Material, Integer> items) {
+        List<GroupedItem> groupedItems = new ArrayList<>();
+        
+        // Add group items
+        String[] groupNames = {"Skulkers", "Beds", "Potions", "Enchanted_Books", "Minecarts", "Boats", "Banners", "Music_Disc", "Buckets"};
+        
+        for (String groupName : groupNames) {
+            List<Material> groupMaterials = GetGroupMaterials(groupName);
+            
+            if (allMaterialsInGroup(items, groupMaterials)) {
+                // Get stack size from the first material in the group
+                Material representative = groupMaterials.get(0);
+                int groupStackSize = items.get(representative);
+                
+                // Verify all materials in group have the same stack size
+                boolean allSameSize = true;
+                for (Material material : groupMaterials) {
+                    if (!items.get(material).equals(groupStackSize)) {
+                        allSameSize = false;
+                        break;
+                    }
+                }
+                
+                if (allSameSize) {
+                    groupedItems.add(new GroupedItem(groupName, representative, groupStackSize, groupMaterials.size()));
+                }
+            }
+        }
+        
+        // Add individual items (not in any group)
+        Map<Material, Integer> individualItems = getIndividualItems(items);
+        for (Map.Entry<Material, Integer> entry : individualItems.entrySet()) {
+            groupedItems.add(new GroupedItem("Individual", entry.getKey(), entry.getValue(), 1));
+        }
+        
+        return groupedItems;
+    }
+    
+    
+    private boolean allMaterialsInGroup(Map<Material, Integer> items, List<Material> groupMaterials) {
+        for (Material material : groupMaterials) {
+            if (!items.containsKey(material)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private Map<Material, Integer> getIndividualItems(Map<Material, Integer> items) {
+        Map<Material, Integer> individualItems = new HashMap<>(items);
+        
+        // Remove all group materials
+        String[] groupNames = {"Skulkers", "Beds", "Potions", "Enchanted_Books", "Minecarts", "Boats", "Banners", "Music_Disc", "Buckets"};
+        
+        for (String groupName : groupNames) {
+            List<Material> groupMaterials = GetGroupMaterials(groupName);
+            for (Material material : groupMaterials) {
+                individualItems.remove(material);
+            }
+        }
+        
+        return individualItems;
+    }
+
+    public static class GroupedItem {
+        private final String groupName;
+        private final Material representative;
+        private final int stackSize;
+        private final int itemCount;
+
+        public GroupedItem(String groupName, Material representative, int stackSize, int itemCount) {
+            this.groupName = groupName;
+            this.representative = representative;
+            this.stackSize = stackSize;
+            this.itemCount = itemCount;
         }
 
-        return items;
+        public String getGroupName() { return groupName; }
+        public Material getRepresentative() { return representative; }
+        public int getStackSize() { return stackSize; }
+        public int getItemCount() { return itemCount; }
+
+        public String getDisplayName() {
+            if ("Individual".equals(groupName)) {
+                return getFriendlyMaterialName(representative);
+            } else {
+                return (groupName) + " (" + itemCount + " items)";
+            }
+        }
+    }
+    
+    public static String getFriendlyMaterialName(Material material) {
+        try {
+            net.md_5.bungee.api.chat.TranslatableComponent component =
+                new net.md_5.bungee.api.chat.TranslatableComponent(material.getTranslationKey());
+            return component.toPlainText();
+        } catch (Exception e) {
+            System.out.println("TranslatableComponent failed for " + material.toString() + " " + e.getMessage());
+            // Fallback to simple conversion if TranslatableComponent fails
+            String name = material.toString().toLowerCase();
+            name = name.replace("_", " ");
+            String[] words = name.split(" ");
+            StringBuilder result = new StringBuilder();
+            for (String word : words) {
+                if (result.length() > 0) result.append(" ");
+                result.append(word.substring(0, 1).toUpperCase()).append(word.substring(1));
+            }
+            return result.toString();
+        }
+    }
+
+    
+    public boolean canStackBuckets(Map<Material, Integer> items) {
+        List<Material> bucketsMaterials = GetGroupMaterials("Buckets");
+        for (Material material : bucketsMaterials) {
+            if (!items.containsKey(material)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void SaveGroupStackSize(String groupName, int newSize) {
+        ConfigurationSection GroupsSection = config.getConfigurationSection("Groups");
+        if (GroupsSection == null) {
+            GroupsSection = config.createSection("Groups");
+        }
+
+        GroupsSection.set(groupName, newSize);
     }
 
     public boolean Save(Map<Material, Integer> items) {
@@ -268,6 +393,7 @@ public class Config {
         ClearFromGroup(items, GroupsSection, materialsToClear, "Boats");
         ClearFromGroup(items, GroupsSection, materialsToClear, "Banners");
         ClearFromGroup(items, GroupsSection, materialsToClear, "Music_Disc");
+        ClearFromGroup(items, GroupsSection, materialsToClear, "Buckets");
 
         for (Material material : materialsToClear) {
             items.remove(material);
@@ -282,7 +408,7 @@ public class Config {
         try {
             int maxStackSize = Integer.parseInt(groupValue.toString());
             for (Material material : materials) {
-                if (items.get(material) == null) {return;}
+                if (items.get(material) == null) {continue;}
                 int value = items.get(material);
 
                 if (maxStackSize == value) {

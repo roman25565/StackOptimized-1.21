@@ -32,3 +32,32 @@
 *.ipr
 *.iws
 .idea/
+
+# vscode / cursor
+.vscode/
+.cursor/
+
+# jetbrains rider
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcxproj.user.filters
+
+# logs
+*.log
+logs/
+
+# temporary files
+*.tmp
+*.temp
+*~
+
+# os generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

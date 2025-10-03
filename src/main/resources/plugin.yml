@@ -4,4 +4,10 @@ main: Roman.stackOptimized.StackOptimized
 api-version: '1.21'
 commands:
   setMaxStackSize:
-    description: yyyy
+    description: Set max stack size for item in hand
+  stackgui:
+    description: Open admin GUI for StackOptimized
+  name:
+    description: Get name of item in hand
+permissions:
+    description: Allows access to StackOptimized admin features
