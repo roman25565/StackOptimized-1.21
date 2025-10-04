@@ -9,5 +9,6 @@ commands:
     description: Open admin GUI for StackOptimized
   name:
     description: Get name of item in hand
-permissions:
-    description: Allows access to StackOptimized admin features
+  resetstacks:
+    description: Reset all item stack sizes to default values
+    permission: stackoptimized.admin
