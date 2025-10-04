@@ -17,7 +17,6 @@ public final class StackOptimized extends JavaPlugin {
     private Map<ItemGroup, Integer> _groups = new HashMap<>();
 
     public Map<Material, Integer> GetItems() {
-        System.out.println("GetItems");
         return _items;
     }
 
@@ -90,7 +89,6 @@ public final class StackOptimized extends JavaPlugin {
     }
 
     public void updateItemStackSize(Material material, int newSize) {
-        System.out.println("updateItemStackSize");
         _items.put(material, newSize);
         config.saveSingleItem(material, newSize);
         this.saveConfig();

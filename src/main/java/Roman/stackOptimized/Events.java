@@ -17,7 +17,6 @@ public class Events implements Listener {
 
     @EventHandler
     public void PlayerPickup(EntityPickupItemEvent event) {
-        System.out.println("PlayerPickup");
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
