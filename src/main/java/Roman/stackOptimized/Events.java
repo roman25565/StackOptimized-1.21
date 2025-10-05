@@ -1,5 +1,7 @@
 package Roman.stackOptimized;
 
+import java.util.Map;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +28,11 @@ public class Events implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void ItemSpawnEvent(ItemSpawnEvent event) {
+        Map<ItemGroup, Integer> groups = plugin.GetGroups();
+        if (groups.containsKey(ItemGroup.SHULKERS) && groups.get(ItemGroup.SHULKERS) == 0) return;
         ItemStack itemStack = event.getEntity().getItemStack();
+        if (!ItemGroup.SHULKERS.getMaterials().contains(itemStack.getType())) return;
+        System.out.println("ItemSpawnEvent " + itemStack.getType());
         plugin.TryStack(itemStack);
     }
 }
