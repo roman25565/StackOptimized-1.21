@@ -32,7 +32,6 @@ public class Events implements Listener {
         if (groups.containsKey(ItemGroup.SHULKERS) && groups.get(ItemGroup.SHULKERS) == 0) return;
         ItemStack itemStack = event.getEntity().getItemStack();
         if (!ItemGroup.SHULKERS.getMaterials().contains(itemStack.getType())) return;
-        System.out.println("ItemSpawnEvent " + itemStack.getType());
         plugin.TryStack(itemStack);
     }
 }

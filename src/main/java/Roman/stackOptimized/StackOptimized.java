@@ -105,9 +105,14 @@ public final class StackOptimized extends JavaPlugin {
         _groups.put(ItemGroup.fromConfigName(groupName), newSize);
     }
 
-    public void removeItemFromSystem(Material representative) {
-        config.removeSingleItem(representative);
-        _items.remove(representative);
+    public void removeItemFromSystem(Material material) {
+        config.removeSingleItem(material);
+        _items.remove(material);
+        var groups = GetGroups();
+        ItemGroup fromMaterial = ItemGroup.fromMaterial(material);
+        if (fromMaterial != null || groups.containsKey(fromMaterial)) {
+            _items.put(material, groups.get(fromMaterial));
+        }
         this.saveConfig();
     }
 

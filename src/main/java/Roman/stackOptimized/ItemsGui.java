@@ -101,7 +101,6 @@ public class ItemsGui implements Listener {
 
 		Player player = (Player) who;
 
-		// Перевірка на OP гравця
 		if (!player.isOp()) {
 			player.sendMessage(ChatColor.RED + "You must be OP to use this GUI!");
 			return;

@@ -81,6 +81,15 @@ public enum ItemGroup {
         return null;
     }
 
+    public static ItemGroup fromMaterial(Material material) {
+        for (ItemGroup group : values()) {
+            if (group.materials.contains(material)) {
+                return group;
+            }
+        }
+        return null;
+    }
+
     public static ItemGroup[] getAllGroups() {
         return values();
     }
